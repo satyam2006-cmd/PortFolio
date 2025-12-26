@@ -20,17 +20,16 @@ const LazyPlasma = () => {
   }, [])
 
   if (!isClient) return null
-  if (isMobile) return null // Disable on mobile for performance
   
   return (
     <div className="fixed inset-0 z-0 pr-[5px]">
       <Plasma 
         color="#01f99a"
-        speed={0.8} // Reduced speed for better performance
+        speed={isMobile ? 0.3 : 0.8} // Slower on mobile
         direction="forward"
         scale={1}
-        opacity={1} // Full opacity for desktop
-        mouseInteractive={false} // Disable mouse interaction on mobile
+        opacity={isMobile ? 0.6 : 1} // Reduced opacity on mobile
+        mouseInteractive={!isMobile} // Disable mouse interaction on mobile
       />
     </div>
   )
