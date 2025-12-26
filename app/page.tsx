@@ -26,7 +26,7 @@ const LazyPlasma = () => {
     <div className="fixed inset-0 z-0 pr-[5px]">
       <Plasma 
         color="#01f99a"
-        speed={0.5} // Reduced speed for better performance
+        speed={0.8} // Reduced speed for better performance
         direction="forward"
         scale={1}
         opacity={1} // Full opacity for desktop
