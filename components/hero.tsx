@@ -28,7 +28,7 @@ export default function Hero() {
       opacity: 1,
       transition: {
         duration: reducedMotion ? 0 : 0.6,
-        ease: "easeOut",
+        ease: [0.25, 0.1, 0.25, 1] as const,
         staggerChildren: reducedMotion ? 0 : 0.2
       }
     }
@@ -41,7 +41,7 @@ export default function Hero() {
       y: 0,
       transition: {
         duration: reducedMotion ? 0 : isMobile ? 0.4 : 0.8,
-        ease: "easeOut"
+        ease: [0.25, 0.1, 0.25, 1] as const
       }
     }
   }
