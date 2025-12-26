@@ -64,7 +64,19 @@ export default function Hero() {
                 onClick={(e) => {
                   if (item.href.startsWith("#")) {
                     e.preventDefault()
-                    document.querySelector(item.href)?.scrollIntoView({ behavior: "smooth" })
+                    const targetElement = document.querySelector(item.href)
+                    if (targetElement) {
+                      targetElement.scrollIntoView({ behavior: "smooth" })
+                    } else {
+                      // If element doesn't exist yet (lazy loaded), scroll to bottom first then wait
+                      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" })
+                      setTimeout(() => {
+                        const element = document.querySelector(item.href)
+                        if (element) {
+                          element.scrollIntoView({ behavior: "smooth" })
+                        }
+                      }, 1000)
+                    }
                   }
                 }}
               >
