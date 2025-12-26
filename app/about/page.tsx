@@ -185,10 +185,25 @@ export default function About() {
                 className="group inline-flex items-center gap-4 text-xl font-serif hover:text-gray-400 transition-colors"
                 onClick={(e) => {
                   e.preventDefault()
-                  window.location.href = "/#work"
+                  // Navigate to home first, then scroll to work section
+                  window.location.href = "/"
                   setTimeout(() => {
-                    document.querySelector("#work")?.scrollIntoView({ behavior: "smooth" })
-                  }, 100)
+                    // Wait for page to load, then scroll to work
+                    const checkForWorkSection = () => {
+                      const workElement = document.querySelector("#work")
+                      if (workElement) {
+                        workElement.scrollIntoView({ behavior: "smooth" })
+                      } else {
+                        // If work section not loaded yet, scroll to bottom and retry
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" })
+                        setTimeout(() => {
+                          document.querySelector("#work")?.scrollIntoView({ behavior: "smooth" })
+                        }, 1000)
+                      }
+                    }
+                    // Check immediately or wait a bit for page load
+                    setTimeout(checkForWorkSection, 100)
+                  }, 50)
                 }}
               >
                 View Selected Projects

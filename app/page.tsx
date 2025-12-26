@@ -25,7 +25,7 @@ const LazyPlasma = () => {
     <div className="fixed inset-0 z-0 pr-[5px]">
       <Plasma 
         color="#01f99a"
-        speed={isMobile ? 0.3 : 1} // Slower on mobile
+        speed={isMobile ? 0.4 : 1} // Slower on mobile
         direction="forward"
         scale={1}
         opacity={isMobile ? 0.6 : 1} // Reduced opacity on mobile
