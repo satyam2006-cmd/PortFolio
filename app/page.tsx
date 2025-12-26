@@ -29,7 +29,7 @@ const LazyPlasma = () => {
         speed={0.5} // Reduced speed for better performance
         direction="forward"
         scale={1}
-        opacity={0.6} // Reduced opacity
+        opacity={1} // Full opacity for desktop
         mouseInteractive={false} // Disable mouse interaction on mobile
       />
     </div>
