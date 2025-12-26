@@ -43,7 +43,8 @@ void mainImage(out vec4 o, vec2 C) {
   float i, d, z, T = iTime * uSpeed * uDirection;
   vec3 O, p, S;
 
-  for (vec2 r = iResolution.xy, Q; ++i < 60.; O += o.w/d*o.xyz) {
+  // Reduced iterations for better performance
+  for (vec2 r = iResolution.xy, Q; ++i < 40.; O += o.w/d*o.xyz) {
     p = z*normalize(vec3(C-.5*r,r.y)); 
     p.z -= 4.; 
     S = p;
@@ -91,23 +92,34 @@ export const Plasma = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const mousePos = useRef({ x: 0, y: 0 });
   const [isSupported, setIsSupported] = useState(true);
+  const [isLowEndDevice, setIsLowEndDevice] = useState(false);
 
   useEffect(() => {
-    // Check WebGL 2 support
-    const testCanvas = document.createElement('canvas');
-    const testGl = testCanvas.getContext('webgl2');
-    if (!testGl) {
-      console.warn('WebGL2 not supported, Plasma effect disabled');
-      setIsSupported(false);
-      return;
-    }
+    // Detect low-end devices
+    const checkDevicePerformance = () => {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl2');
+      if (!gl) {
+        setIsSupported(false);
+        return;
+      }
+
+      // Check for low-end device indicators
+      const isLowEnd = 
+        navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4 ||
+        (window as any).deviceMemory <= 4 ||
+        /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      setIsLowEndDevice(isLowEnd);
+    };
+
+    checkDevicePerformance();
 
     if (!containerRef.current) return;
     const containerEl = containerRef.current;
 
     const useCustomColor = color ? 1.0 : 0.0;
     const customColorRgb = color ? hexToRgb(color) : [1, 1, 1];
-
     const directionMultiplier = direction === 'reverse' ? -1.0 : 1.0;
 
     let renderer;
@@ -116,7 +128,7 @@ export const Plasma = ({
         webgl: 2,
         alpha: true,
         antialias: false,
-        dpr: Math.min(window.devicePixelRatio || 1, 2)
+        dpr: Math.min(window.devicePixelRatio || 1, isLowEndDevice ? 1.5 : 2)
       });
     } catch (error) {
       console.error('Failed to initialize OGL renderer:', error);
@@ -144,12 +156,12 @@ export const Plasma = ({
           iResolution: { value: new Float32Array([1, 1]) },
           uCustomColor: { value: new Float32Array(customColorRgb) },
           uUseCustomColor: { value: useCustomColor },
-          uSpeed: { value: speed * 0.4 },
+          uSpeed: { value: speed * (isLowEndDevice ? 0.2 : 0.4) },
           uDirection: { value: directionMultiplier },
           uScale: { value: scale },
           uOpacity: { value: opacity },
           uMouse: { value: new Float32Array([0, 0]) },
-          uMouseInteractive: { value: mouseInteractive ? 1.0 : 0.0 }
+          uMouseInteractive: { value: mouseInteractive && !isLowEndDevice ? 1.0 : 0.0 }
         }
       });
     } catch (error) {
@@ -162,7 +174,7 @@ export const Plasma = ({
     const mesh = new Mesh(gl, { geometry, program });
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!mouseInteractive || !containerRef.current) return;
+      if (!mouseInteractive || isLowEndDevice || !containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       mousePos.current.x = e.clientX - rect.left;
       mousePos.current.y = e.clientY - rect.top;
@@ -171,7 +183,7 @@ export const Plasma = ({
       mouseUniform[1] = mousePos.current.y;
     };
 
-    if (mouseInteractive && containerEl) {
+    if (mouseInteractive && !isLowEndDevice && containerEl) {
       containerEl.addEventListener('mousemove', handleMouseMove);
     }
 
@@ -192,8 +204,18 @@ export const Plasma = ({
 
     let raf = 0;
     const t0 = performance.now();
-    const loop = (t: number) => {
-      let timeValue = (t - t0) * 0.001;
+    const targetFPS = isLowEndDevice ? 30 : 60;
+    const frameInterval = 1000 / targetFPS;
+    let then = performance.now();
+
+    const loop = (now: number) => {
+      raf = requestAnimationFrame(loop);
+
+      const delta = now - then;
+      if (delta < frameInterval) return;
+      then = now - (delta % frameInterval);
+
+      let timeValue = (now - t0) * 0.001;
       if (direction === 'pingpong') {
         const pingpongDuration = 10;
         const segmentTime = timeValue % pingpongDuration;
@@ -207,14 +229,13 @@ export const Plasma = ({
         program.uniforms.iTime.value = timeValue;
       }
       renderer.render({ scene: mesh });
-      raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      if (mouseInteractive && containerEl) {
+      if (mouseInteractive && !isLowEndDevice && containerEl) {
         containerEl.removeEventListener('mousemove', handleMouseMove);
       }
       try {
@@ -225,7 +246,7 @@ export const Plasma = ({
         console.warn('Canvas already removed from container');
       }
     };
-  }, [color, speed, direction, scale, opacity, mouseInteractive]);
+  }, [color, speed, direction, scale, opacity, mouseInteractive, isLowEndDevice]);
 
   if (!isSupported) {
     // Fallback: simple CSS gradient background
