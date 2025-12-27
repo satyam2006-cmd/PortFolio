@@ -14,10 +14,10 @@ export default function FooterNew() {
             <a href="https://github.com/satyam2006-cmd" target="_blank" rel="noopener noreferrer" title="GitHub">
               <Github size={20} className="text-gray-400 hover:text-accent transition-colors" />
             </a>
-            <a href="mailto:satyam.bhagat.contact@gmail.com" title="Email">
+            <a href="mailto:satyambhagat200623@gmail.com" title="Email">
               <Mail size={20} className="text-gray-400 hover:text-accent transition-colors" />
             </a>
-            <a href="#" title="LinkedIn">
+            <a href="https://www.linkedin.com/in/satyam-bhagat2006/" title="LinkedIn">
               <Linkedin size={20} className="text-gray-400 hover:text-accent transition-colors" />
             </a>
           </div>
