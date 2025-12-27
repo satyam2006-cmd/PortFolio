@@ -150,7 +150,7 @@ export default function Footer() {
                 <Github size={18} className="group-hover:scale-110 transition-transform" />
               </a>
               <a
-                href="https://www.linkedin.com/in/satyam-bhagat/"
+                href="https://www.linkedin.com/in/satyam-bhagat2006/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 border border-primary-foreground/30 rounded-full hover:bg-primary-foreground hover:text-primary transition-all duration-300 group"
@@ -168,7 +168,7 @@ export default function Footer() {
                 <Twitter size={18} className="group-hover:scale-110 transition-transform" />
               </a>
               <a
-                href="mailto:satyam.bhagat.contact@gmail.com"
+                href="mailto:satyambhagat200622@gmail.com"
                 className="p-3 border border-primary-foreground/30 rounded-full hover:bg-primary-foreground hover:text-primary transition-all duration-300 group"
                 title="Email"
               >
