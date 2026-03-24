@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import styles from './Navbar.module.css'
 
-const menuItems = ['Home', 'Projects', 'Timeline', 'Contact']
+// Navbar component
 
 interface NavbarProps {
   isOpen: boolean
@@ -23,10 +23,7 @@ const Navbar = ({ isOpen, setIsOpen }: NavbarProps) => {
         {isOpen ? <X size={20} /> : <Menu size={20} />}
       </motion.button>
 
-      {/* The menu expansion is now handled in page.tsx for layout positioning if needed, 
-          but keeping the internal list here for simplicity unless we want it separate. 
-          Actually, the user wants the WHOLE grid to shrink, so the menu should probably 
-          be ABOVE the shrinking content. */}
+      {/* Expansion is handled in page.tsx */}
     </div>
   )
 }
