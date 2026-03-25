@@ -7,6 +7,8 @@ import Navbar from '@/components/Navbar'
 import { AnimatedText } from '@/components/AnimatedText'
 import Preloader from '@/components/Preloader'
 import ExperienceSection from '@/components/ExperienceSection'
+import ContactCTA from '@/components/ContactCTA'
+import Footer from '@/components/Footer'
 
 const menuItems = ['Home', 'Projects', 'Timeline', 'Contact']
 
@@ -135,6 +137,10 @@ export default function Home() {
             </section>
           </div>
           <ExperienceSection />
+          <div style={{ background: '#000' }}>
+            <ContactCTA />
+            <Footer />
+          </div>
         </main>
       </motion.div>
       </motion.div>

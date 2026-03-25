@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Carousel from './Carousel';
+import ProjectGallery from './ProjectGallery';
 
 // Types
 interface GitHubRepo {
@@ -42,9 +44,9 @@ const ExperienceCard = ({
           y: isHovered ? -15 : 0,
           scale: isHovered ? 1.05 : 1,
           boxShadow: isHovered
-            ? side === 'left'
+            ? (side === 'left'
               ? '25px 25px 40px rgba(0,0,0,0.15)'
-              : '-25px 25px 40px rgba(0,0,0,0.15)'
+              : '-25px 25px 40px rgba(0,0,0,0.15)')
             : '0px 0px 0px rgba(0,0,0,0)',
         }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -90,10 +92,10 @@ const ExperienceCard = ({
                 pointerEvents: 'none',
               }}
             >
-              <h3 style={{ 
-                fontSize: 'clamp(2.4rem, 6vw, 3.8rem)', 
-                fontFamily: 'serif', 
-                margin: '0', 
+              <h3 style={{
+                fontSize: 'clamp(2.4rem, 6vw, 3.8rem)',
+                fontFamily: 'serif',
+                margin: '0',
                 fontWeight: 400,
                 lineHeight: 1,
                 textTransform: 'uppercase',
@@ -113,31 +115,28 @@ const ExperienceCard = ({
 
         <AnimatePresence>
           {isHovered && (
-             <motion.div 
-               key="hover-frame"
-               initial={{ opacity: 0 }}
-               animate={{ opacity: 1 }}
-               exit={{ opacity: 0 }}
-               style={{
-                 position: 'absolute',
-                 inset: 0,
-                 borderLeft: side === 'left' ? '4px solid rgba(255,255,255,0.9)' : '20px solid rgba(0,0,0,0.3)',
-                 borderTop: '4px solid rgba(255,255,255,0.9)',
-                 borderRight: side === 'right' ? '4px solid rgba(255,255,255,0.9)' : '20px solid rgba(0,0,0,0.3)',
-                 borderBottom: '20px solid rgba(0,0,0,0.4)',
-                 pointerEvents: 'none',
-                 zIndex: 35,
-               }}
-             />
+            <motion.div
+              key="hover-frame"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                borderLeft: (side === 'left') ? '4px solid rgba(255,255,255,0.9)' : '20px solid rgba(0,0,0,0.3)',
+                borderTop: '4px solid rgba(255,255,255,0.9)',
+                borderRight: (side === 'right') ? '4px solid rgba(255,255,255,0.9)' : '20px solid rgba(0,0,0,0.3)',
+                borderBottom: '20px solid rgba(0,0,0,0.4)',
+                pointerEvents: 'none',
+                zIndex: 35,
+              }}
+            />
           )}
         </AnimatePresence>
       </motion.div>
     </div>
   );
 };
-
-import Carousel from './Carousel';
-import ProjectGallery from './ProjectGallery';
 
 // ─── Expanded Section View (Split Layout) ───────────────────────────
 const ExpandedSectionView = ({
@@ -153,7 +152,6 @@ const ExpandedSectionView = ({
   side: 'left' | 'right';
   onClose: () => void;
 }) => {
-  // Map GitHub repos to Carousel format
   const carouselItems = repos.map(repo => ({
     id: repo.name,
     title: repo.name.replace(/-/g, ' '),
@@ -161,6 +159,10 @@ const ExpandedSectionView = ({
     url: repo.homepage || repo.html_url,
     tech: repo.language || undefined
   }));
+
+  const bgStyle = side === 'right'
+    ? 'radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 50%), linear-gradient(135deg, #FFB800 0%, #CC9900 40%, #5C4500 100%)'
+    : bgColor;
 
   return (
     <motion.div
@@ -170,29 +172,32 @@ const ExpandedSectionView = ({
       transition={{ duration: 0.5 }}
       style={{
         position: 'fixed',
-        inset: '2vw', // Give it a floating container look
+        inset: '2vw',
         borderRadius: '32px',
-        backgroundColor: bgColor,
-        border: '1px solid rgba(255,255,255,0.2)',
+        background: bgStyle,
+        border: '1px solid rgba(255,255,255,0.15)',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
         zIndex: 1000,
         overflow: 'hidden',
         display: 'flex',
       }}
     >
-      {/* Background styling / Gradient for the right panel bleed */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: `
-          radial-gradient(circle at 75% 50%, rgba(255,255,255,0.08) 0%, transparent 60%),
-          linear-gradient(to right, rgba(0,0,0,0.2) 0%, transparent 100%)
-        `,
-        zIndex: 1,
-        pointerEvents: 'none',
-      }} />
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+        .expanded-scroll::-webkit-scrollbar { display: none; }
+      `}</style>
 
-      {/* Close button */}
+      {side === 'right' && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          opacity: 0.04,
+          pointerEvents: 'none',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          zIndex: 1,
+        }} />
+      )}
+
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -201,10 +206,10 @@ const ExpandedSectionView = ({
           position: 'absolute',
           top: '30px',
           left: '30px',
-          background: 'rgba(0,0,0,0.05)',
-          border: '1px solid rgba(0,0,0,0.1)',
+          background: 'rgba(255,255,255,0.1)',
+          border: '1px solid rgba(255,255,255,0.2)',
           borderRadius: '50%',
-          color: '#111', // dark for white background
+          color: '#fff',
           cursor: 'pointer',
           fontSize: '1.5rem',
           fontWeight: 300,
@@ -216,113 +221,197 @@ const ExpandedSectionView = ({
           alignItems: 'center',
           justifyContent: 'center',
         }}
-        whileHover={{ scale: 1.1, background: 'rgba(0,0,0,0.1)' }}
+        whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.2)' }}
       >
         ✕
       </motion.button>
 
-      {/* LEFT HALF: White Container + Astronaut */}
+      {/* LEFT HALF: 25% */}
       <div style={{
         flex: 1,
         position: 'relative',
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        backgroundColor: '#f5f5f7', // pristine white-ish container
-        zIndex: 10,
-        pointerEvents: 'none', // let clicks pass through to background if needed
-      }}>
-        {/* subtle title on left side */}
-        <div style={{
-          position: 'absolute',
-          top: '40px',
-          right: '40px',
-          fontFamily: 'serif',
-          fontSize: '3rem',
-          color: 'rgba(0,0,0,0.05)',
-          fontWeight: 'bold',
-          letterSpacing: '-2px',
-          textAlign: 'right',
-          lineHeight: 1,
-        }}>
-          EXPLORE<br/>PROJECTS
-        </div>
-
-        <motion.img
-          src={imageSrc}
-          alt="Astronaut"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            height: '85%',
-            objectFit: 'contain',
-            filter: 'drop-shadow(20px 0 60px rgba(0,0,0,0.15))',
-            transformOrigin: 'bottom center',
-          }}
-        />
-      </div>
-
-      {/* RIGHT HALF: Content (Carousel or Timeline) */}
-      <div style={{
-        flex: 1,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
+        paddingLeft: '3%',
         zIndex: 10,
-        height: '100%',
-        backgroundColor: 'rgba(0,0,0,0.1)', // slightly darker than the main card background
-        borderLeft: '1px solid rgba(255,255,255,0.1)',
-        backdropFilter: 'blur(20px)',
-        position: 'relative',
-        overflow: 'hidden', // clips the coverflow carousel smoothly
+        pointerEvents: 'none',
+        overflow: 'hidden',
       }}>
-        {side === 'left' && carouselItems.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 0.07 }}
+          transition={{ duration: 1.5, delay: 0.5 }}
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '10%',
+            transform: 'translateY(-50%)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            zIndex: 1,
+          }}
+        >
+          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(3rem, 6vw, 6rem)', fontWeight: 300, fontStyle: 'italic', color: '#fff', lineHeight: 0.9, textAlign: 'left', letterSpacing: '-2px' }}>
+            Devlogs
+          </span>
+          <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.5rem, 3vw, 3rem)', fontWeight: 300, fontStyle: 'italic', color: '#fff', letterSpacing: '6px', textTransform: 'uppercase', marginTop: '10px' }}>
+            & Story
+          </span>
+        </motion.div>
+
+        <div style={{ height: '75%', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5 }}>
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.6 }}
+            style={{
+              position: 'absolute',
+              width: '105%',
+              height: '105%',
+              backgroundColor: '#fff',
+              WebkitMaskImage: `url(${imageSrc})`,
+              maskImage: `url(${imageSrc})`,
+              WebkitMaskSize: 'contain',
+              maskSize: 'contain',
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+              WebkitMaskPosition: 'center',
+              maskPosition: 'center',
+              backgroundImage: 'radial-gradient(circle, white 2px, transparent 2px)',
+              backgroundSize: '12px 12px',
+              zIndex: 4,
+              pointerEvents: 'none',
+              filter: 'blur(0.5px)',
+            }}
+          />
+          <motion.img
+            src={imageSrc}
+            alt="Astronaut"
+            initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Carousel 
-              items={carouselItems} 
-              baseWidth={650} 
-              baseHeight={550} 
-              loop={true} 
-            />
-          </motion.div>
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            style={{ height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.3)) drop-shadow(20px 0 60px rgba(0,0,0,0.2))', zIndex: 5, position: 'relative' }}
+          />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0.4, 0.7, 0.4] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          style={{ position: 'absolute', bottom: '30px', left: '30px', display: 'flex', alignItems: 'center', gap: '8px', pointerEvents: 'none', zIndex: 10 }}
+        >
+          <div style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#00ff00', boxShadow: '0 0 8px #00ff00' }} />
+          <span style={{ fontSize: '0.65rem', letterSpacing: '2px', color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>STATUS: EXPLORING</span>
+        </motion.div>
+      </div>
+
+      {/* VERTICAL DIVIDER */}
+      <div style={{ width: '1px', backgroundColor: '#000', height: '100%', zIndex: 10, opacity: 0.8 }} />
+
+      {/* RIGHT HALF: 75% */}
+      <div style={{ flex: 3, display: 'flex', flexDirection: 'column', zIndex: 10, height: '100%', position: 'relative', overflow: 'hidden' }}>
+        {side === 'left' && (carouselItems.length > 0) && (
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Carousel items={carouselItems} baseWidth={650} baseHeight={550} loop={true} />
+          </div>
         )}
 
         {side === 'right' && (
-          <div style={{
-            textAlign: 'center',
-            color: 'white',
-          }}>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              style={{
-                fontFamily: 'serif',
-                fontSize: 'clamp(2rem, 5vw, 4rem)',
-                fontWeight: 400,
-                letterSpacing: '0.1em',
-                marginBottom: '1rem',
-              }}
-            >
-              COMING SOON
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              transition={{ delay: 0.3 }}
-              style={{ fontSize: '1rem', letterSpacing: '0.15em' }}
-            >
-              TIMELINE & BLOG
-            </motion.p>
+          <div className="expanded-scroll" style={{ width: '100%', height: '100%', overflowY: 'auto', padding: '80px 80px', background: 'rgba(255, 255, 255, 0.92)', backdropFilter: 'blur(10px)', color: '#000', zIndex: 2 }}>
+            <header style={{ marginBottom: '60px' }}>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.2rem, 6vw, 4.2rem)', fontWeight: 800, letterSpacing: '-2px', margin: 0, lineHeight: 1, color: '#000' }}>
+                DEV LOGS
+              </h2>
+              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem', letterSpacing: '0.5px', marginTop: '15px', maxWidth: '500px', lineHeight: 1.6, color: '#222', fontStyle: 'italic' }}>
+                Journey through my growth, learning, and exploration
+              </p>
+            </header>
+
+            <div style={{ position: 'relative', paddingLeft: '35px', marginBottom: '100px' }}>
+              <div style={{ position: 'absolute', left: '7px', top: '8px', bottom: '8px', width: '2px', background: 'rgba(0,0,0,0.1)' }} />
+              {[
+                { year: "2024", title: "Entered Engineering", points: ["Began Computer Science (Data Science)", "Built strong foundations in programming & problem-solving", "Explored system logic and core concepts"] },
+                { year: "2024", title: "Development Phase", points: ["Started building web applications", "Learned Flask, frontend design, and system thinking", "Developed initial real-world applications"] },
+                { year: "2025", title: "Data Science Journey Begins", points: ["Machine Learning, EDA, and model building", "Focused on data-driven problem solving", "Improved analytical thinking and model accuracy"] },
+                { year: "2026", title: "Hackathons & Exploration", points: ["Participated in competitive hackathons", "Built real-world AI-based systems", "Focused on deployment and usability"] },
+                { year: "2026", title: "Growth & Expansion", points: ["Advancing into intelligent systems and deep learning", "Improving performance, scalability, and design", "Exploring immersive web + AI integration"] }
+              ].map((item, index) => (
+                <div key={index} style={{ marginBottom: '45px', position: 'relative' }}>
+                  <div style={{ position: 'absolute', left: '-34px', top: '5px', width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#FFB800', border: '2px solid rgba(255,255,255,0.4)', zIndex: 2 }} />
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '0.9rem', fontWeight: 800, letterSpacing: '2px', marginBottom: '10px', color: '#000' }}>
+                    {item.year} — {item.title.toUpperCase()}
+                  </h3>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {item.points.map((p, i) => (
+                      <li key={i} style={{ fontSize: '1.15rem', color: '#333', fontWeight: 500, marginBottom: '12px', lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <span style={{ color: '#FFB800', fontWeight: 900 }}>■</span> {p}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <section style={{ borderTop: '2px solid rgba(0,0,0,0.05)', paddingTop: '60px', marginBottom: '80px' }}>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.8rem', marginBottom: '35px', fontWeight: 800, color: '#000' }}>THE STORY</h2>
+              <div style={{ fontSize: '1.15rem', lineHeight: 1.8, color: '#111' }}>
+                <p style={{ marginBottom: '25px', fontWeight: 700, color: '#000', fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', lineHeight: 1.4 }}>
+                  Bridging the gap between complex algorithms and human-centric design.
+                </p>
+                <p style={{ marginBottom: '30px', fontWeight: 500 }}>
+                  I'm an aspiring Data Scientist and Developer based in India, dedicated to uncovering the stories hidden within data. My journey began with a curiosity for how systems work, which quickly evolved into a passion for the mathematical elegance of machine learning.
+                </p>
+                <p style={{ marginBottom: '30px', fontWeight: 500 }}>
+                  Today, I focus on building intelligent applications that don't just process information, but provide clarity. Whether it's predicting market trends or optimizing user experiences, I believe that data is most powerful when it's accessible and actionable.
+                </p>
+
+                <div style={{ marginTop: '50px', marginBottom: '60px' }}>
+                  <h3 style={{ fontSize: '0.6rem', fontWeight: 600, letterSpacing: '2.5px', opacity: 0.45, marginBottom: '20px', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)' }}>
+                    The Approach
+                  </h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '50px' }}>
+                    <div>
+                      <h4 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 700, marginBottom: '15px', color: '#000' }}>Curiosity Driven</h4>
+                      <p style={{ fontSize: '1.1rem', lineHeight: 1.7, fontWeight: 500, color: '#333' }}>
+                        Every project starts with a question. I dive deep into problem statements to understand the underlying mechanics before writing a single line of code.
+                      </p>
+                    </div>
+                    <div>
+                      <h4 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 700, marginBottom: '15px', color: '#000' }}>Design Minded</h4>
+                      <p style={{ fontSize: '1.1rem', lineHeight: 1.7, fontWeight: 500, color: '#333' }}>
+                        Code is only half the battle. I ensure that every solution is accompanied by an intuitive interface, making complex data easy to digest.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '80px' }}>
+                  <h3 style={{ fontSize: '0.7rem', fontWeight: 600, letterSpacing: '3px', opacity: 0.5, marginBottom: '25px', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)' }}>
+                    The Philosophy
+                  </h3>
+                  <div style={{ display: 'flex', gap: '25px', alignItems: 'stretch' }}>
+                    <div style={{ width: '3px', backgroundColor: '#FFB800', borderRadius: '2px' }} />
+                    <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', lineHeight: 1.3, fontWeight: 500, margin: 0, color: '#000', letterSpacing: '-0.5px' }}>
+                      "Data is the new oil, but intelligence is the refinement that makes it fuel for progress."
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ borderTop: '2px solid rgba(0,0,0,0.05)', paddingTop: '50px' }}>
+                  <button
+                    onClick={() => onClose()}
+                    style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '15px', color: '#000', fontFamily: "'Playfair Display', serif", fontSize: '1.5rem', fontWeight: 800 }}
+                  >
+                    View Selected Projects <span style={{ fontSize: '1.3rem', opacity: 1 }}>→</span>
+                  </button>
+                </div>
+              </div>
+            </section>
           </div>
         )}
       </div>
-
     </motion.div>
   );
 };
@@ -334,16 +423,15 @@ const ExperienceSection: React.FC = () => {
 
   const cardData = {
     left: { src: "/rest.jpg", expandedSrc: "/rest-removebg-preview.png", title: "SIDE\nPROJECTS", color: "#800000" },
-    right: { src: "/rest2.jpg", expandedSrc: "/rest2-removebg-preview.png", title: "TIMELINE\nAND BLOG", color: "#CC9900" }
+    right: { src: "/rest2.jpg", expandedSrc: "/rest2-removebg-preview.png", title: "DEVLOGS\n& MY STORY", color: "#CC9900" }
   };
 
-  // Fetch GitHub repos
   useEffect(() => {
     fetch('https://api.github.com/users/satyam2006-cmd/repos?sort=updated&per_page=30')
       .then(res => res.json())
       .then((data: GitHubRepo[]) => {
         const filtered = data.filter(
-          (r) => r.name !== 'satyam2006-cmd' && r.name !== 'PortFolio' && r.name !== 'Portfolio'
+          (r: GitHubRepo) => r.name !== 'satyam2006-cmd' && r.name !== 'PortFolio' && r.name !== 'Portfolio'
         );
         setRepos(filtered);
       })
@@ -376,14 +464,7 @@ const ExperienceSection: React.FC = () => {
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
         style={{ width: '100%', textAlign: 'center', marginBottom: '4vh', flexShrink: 0, zIndex: 1 }}
       >
-        <h2 style={{
-          fontSize: 'clamp(1.8rem, 4vw, 3rem)',
-          fontFamily: 'serif',
-          textTransform: 'uppercase',
-          letterSpacing: '1.2vw',
-          fontWeight: 400,
-          margin: 0,
-        }}>
+        <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontFamily: 'serif', textTransform: 'uppercase', letterSpacing: '1.2vw', fontWeight: 400, margin: 0 }}>
           E X P E R I E N C E
         </h2>
       </motion.div>
@@ -393,21 +474,7 @@ const ExperienceSection: React.FC = () => {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        style={{
-          width: '65%',
-          maxWidth: '1200px',
-          height: '72vh',
-          maxHeight: '450px',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '0',
-          marginBottom: '5vh',
-          position: 'relative',
-          zIndex: 1,
-          overflow: 'hidden',
-          borderRadius: '4px',
-          cursor: 'pointer',
-        }}
+        style={{ width: '65%', maxWidth: '1200px', height: '72vh', maxHeight: '450px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0', marginBottom: '5vh', position: 'relative', zIndex: 1, overflow: 'hidden', borderRadius: '4px', cursor: 'pointer' }}
       >
         <div onClick={() => setSelectedCard('left')}>
           <ExperienceCard {...cardData.left} side="left" />
@@ -417,53 +484,17 @@ const ExperienceSection: React.FC = () => {
         </div>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, delay: 0.5 }}
-        style={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '3rem',
-          flexShrink: 0,
-          zIndex: 1,
-        }}
-      >
-        {['LINKEDIN', 'GITHUB', 'INSTAGRAM', 'SPOTIFY', 'RESUME'].map((link) => (
-          <a
-            key={link}
-            href="#"
-            onClick={(e) => e.preventDefault()}
-            style={{
-              fontSize: '0.65rem',
-              letterSpacing: '0.15rem',
-              textDecoration: 'none',
-              color: '#111111',
-              fontWeight: 600,
-              opacity: 0.4,
-              transition: 'opacity 0.3s'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.4')}
-          >
-            {link}
-          </a>
-        ))}
-      </motion.div>
-
-      {/* Fullscreen Expanded View */}
+      {/* Expanded View Modal */}
       <AnimatePresence>
         {selectedCard === 'left' && (
           <ProjectGallery key="left-gallery" onClose={() => setSelectedCard(null)} />
         )}
         {selectedCard === 'right' && (
           <ExpandedSectionView
-            key={selectedCard}
-            side={selectedCard}
-            imageSrc={cardData[selectedCard].expandedSrc || cardData[selectedCard].src}
-            bgColor={cardData[selectedCard].color}
+            key="expanded-right"
+            side="right"
+            imageSrc={cardData.right.expandedSrc || cardData.right.src}
+            bgColor={cardData.right.color}
             repos={repos}
             onClose={() => setSelectedCard(null)}
           />
