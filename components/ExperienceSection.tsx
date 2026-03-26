@@ -438,6 +438,21 @@ const ExperienceSection: React.FC = () => {
       .catch(console.error);
   }, []);
 
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash === '#projects') {
+        setSelectedCard('left');
+      } else if (hash === '#timeline') {
+        setSelectedCard('right');
+      }
+    };
+    
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
   return (
     <section
       id="experience"
@@ -476,10 +491,10 @@ const ExperienceSection: React.FC = () => {
         transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         style={{ width: '65%', maxWidth: '1200px', height: '72vh', maxHeight: '450px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0', marginBottom: '5vh', position: 'relative', zIndex: 1, overflow: 'hidden', borderRadius: '4px', cursor: 'pointer' }}
       >
-        <div onClick={() => setSelectedCard('left')}>
+        <div id="projects" onClick={() => setSelectedCard('left')} style={{ scrollMarginTop: '100px' }}>
           <ExperienceCard {...cardData.left} side="left" />
         </div>
-        <div onClick={() => setSelectedCard('right')}>
+        <div id="timeline" onClick={() => setSelectedCard('right')} style={{ scrollMarginTop: '100px' }}>
           <ExperienceCard {...cardData.right} side="right" />
         </div>
       </motion.div>

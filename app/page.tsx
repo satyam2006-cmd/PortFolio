@@ -7,10 +7,10 @@ import Navbar from '@/components/Navbar'
 import { AnimatedText } from '@/components/AnimatedText'
 import Preloader from '@/components/Preloader'
 import ExperienceSection from '@/components/ExperienceSection'
-import ContactCTA from '@/components/ContactCTA'
+import ContactSection from '@/components/ContactSection'
 import Footer from '@/components/Footer'
 
-const menuItems = ['Home', 'Projects', 'Timeline', 'Contact']
+const menuItems = ['Home', 'About', 'Projects', 'Timeline', 'Contact']
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false)
@@ -100,12 +100,15 @@ export default function Home() {
           boxShadow: isOpen ? '0 100px 200px rgba(0,0,0,0.15)' : 'none',
           overflow: isOpen ? 'hidden' : 'auto',
           background: '#000000',
-          zIndex: 10
+          zIndex: 10,
+          scrollBehavior: 'smooth'
         }}
       >
         <main className="content-layer">
-          <div id="parallax-target" style={{ height: '600vh', position: 'relative' }}>
-            <section className="hero-section">
+          <div id="home" style={{ scrollMarginTop: 0 }}>
+            <div id="parallax-target" style={{ height: '600vh', position: 'relative' }}>
+              <div id="about" style={{ position: 'absolute', top: '35vh', scrollMarginTop: '100px' }} />
+              <section className="hero-section">
               <div className="hero-enclosure" />
 
               <div className="hero-composition">
@@ -136,11 +139,10 @@ export default function Home() {
               <ScrollRevealParallax />
             </section>
           </div>
-          <ExperienceSection />
-          <div style={{ background: '#000' }}>
-            <ContactCTA />
-            <Footer />
-          </div>
+        </div>
+        <ExperienceSection />
+        <ContactSection />
+        <Footer />
         </main>
       </motion.div>
       </motion.div>
