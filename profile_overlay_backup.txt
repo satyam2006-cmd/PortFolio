@@ -1,0 +1,72 @@
+          {/* Text Overlay */}
+          <motion.div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'rgba(0,0,0,0.6)',
+            color: 'white',
+            padding: '4rem',
+            boxSizing: 'border-box',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            overflowY: 'auto',
+            opacity: textOpacity
+          }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', gap: '4rem', width: '100%', flexWrap: 'wrap' }}>
+              {/* Left Column */}
+              <div style={{ flex: '1 1 400px' }}>
+                <h3 style={{ textTransform: 'uppercase', letterSpacing: '3px', fontSize: '0.9rem', opacity: 0.7, marginBottom: '1rem' }}>The Profile</h3>
+                <h1 style={{ fontSize: '5rem', fontWeight: 800, margin: '0 0 1rem 0', lineHeight: 1 }}>Satyam<br/>Bhagat</h1>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 400, color: '#ff5f1f', marginBottom: '3rem' }}>Aspiring Data Scientist & Developer</h2>
+                
+                <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
+                  <div>
+                    <h4 style={{ textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '2px', opacity: 0.7, marginBottom: '0.5rem' }}>Location</h4>
+                    <p style={{ fontSize: '1.2rem', margin: 0 }}>India</p>
+                  </div>
+                  <div>
+                    <h4 style={{ textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '2px', opacity: 0.7, marginBottom: '0.5rem' }}>Expertise</h4>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '1.1rem', lineHeight: 1.6 }}>
+                      <li>Machine Learning</li>
+                      <li>Development</li>
+                      <li>Data Visualization</li>
+                      <li>Learning</li>
+                      <li>Deep Learning</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2.5rem' }}>
+                <div>
+                  <h3 style={{ textTransform: 'uppercase', letterSpacing: '3px', fontSize: '0.9rem', opacity: 0.7, marginBottom: '1rem' }}>The Story</h3>
+                  <p style={{ fontSize: '1.2rem', lineHeight: 1.6, margin: '0 0 1rem 0', fontWeight: 600 }}>Bridging the gap between complex algorithms and human-centric design.</p>
+                  <p style={{ fontSize: '1.1rem', lineHeight: 1.6, opacity: 0.9, margin: '0 0 1rem 0' }}>I'm an aspiring Data Scientist and Developer based in India, dedicated to uncovering the stories hidden within data. My journey began with a curiosity for how systems work, which quickly evolved into a passion for the mathematical elegance of machine learning.</p>
+                  <p style={{ fontSize: '1.1rem', lineHeight: 1.6, opacity: 0.9, margin: 0 }}>Today, I focus on building intelligent applications that don't just process information, but provide clarity. Whether it's predicting market trends or optimizing user experiences, I believe that data is most powerful when it's accessible and actionable.</p>
+                </div>
+
+                <div>
+                  <h3 style={{ textTransform: 'uppercase', letterSpacing: '3px', fontSize: '0.9rem', opacity: 0.7, marginBottom: '1rem' }}>The Approach</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+                    <div>
+                      <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#ff5f1f' }}>Curiosity Driven</h4>
+                      <p style={{ fontSize: '0.95rem', lineHeight: 1.5, opacity: 0.8, margin: 0 }}>Every project starts with a question. I dive deep into problem statements to understand the underlying mechanics before writing a single line of code.</p>
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', color: '#ff5f1f' }}>Design Minded</h4>
+                      <p style={{ fontSize: '0.95rem', lineHeight: 1.5, opacity: 0.8, margin: 0 }}>Code is only half the battle. I ensure that every solution is accompanied by an intuitive interface, making complex data easy to digest.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 style={{ textTransform: 'uppercase', letterSpacing: '3px', fontSize: '0.9rem', opacity: 0.7, marginBottom: '0.5rem' }}>The Philosophy</h3>
+                  <p style={{ fontSize: '1.3rem', fontStyle: 'italic', lineHeight: 1.5, margin: 0, borderLeft: '3px solid #ff5f1f', paddingLeft: '1.5rem' }}>"Data is the new oil, but intelligence is the refinement that makes it fuel for progress."</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>

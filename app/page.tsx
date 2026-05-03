@@ -1,0 +1,160 @@
+'use client'
+
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import ScrollRevealParallax from '@/components/ScrollRevealParallax'
+import Navbar from '@/components/Navbar'
+import { AnimatedText } from '@/components/AnimatedText'
+import Preloader from '@/components/Preloader'
+import ExperienceSection from '@/components/ExperienceSection'
+import ContactSection from '@/components/ContactSection'
+import TechnologiesSection from '@/components/TechnologiesSection'
+import CodingProfilesSection from '@/components/CodingProfilesSection'
+import Footer from '@/components/Footer'
+import StrockLine, { StrockHeader } from '@/components/StrockLine'
+import { useRef, useEffect } from 'react'
+import { useScroll } from 'framer-motion'
+
+const menuItems = ['Home', 'Projects', 'Timeline', 'Contact']
+
+export default function Home() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const strockContainerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Check if preloader has already been shown in this session
+    const hasShown = sessionStorage.getItem('preloaderShown')
+    if (hasShown) {
+      setIsLoading(false)
+    }
+  }, [])
+
+  const handlePreloaderComplete = () => {
+    setIsLoading(false)
+    sessionStorage.setItem('preloaderShown', 'true')
+  }
+
+  const { scrollYProgress: strockProgress } = useScroll({
+    container: scrollContainerRef,
+    target: strockContainerRef,
+    offset: ["start end", "end end"]
+  })
+
+  return (
+    <div className="main-viewport">
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <Preloader key="preloader" onComplete={handlePreloaderComplete} />
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLoading ? 0 : 1 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+      >
+        {/* Background for when content shrinks */}
+        <div className="app-background" />
+
+        {/* FIXED GLOBAL GRID SYSTEM (Does not shrink) */}
+        <div className="grid-overlay">
+          <div className="grid-frame" />
+          <div className="grid-line-v" style={{ gridColumn: 4 }} />
+          <div className="grid-line-v" style={{ gridColumn: 7 }} />
+          <div className="grid-line-v" style={{ gridColumn: 10 }} />
+          <div className="grid-line-h" style={{ gridRow: 4 }} />
+          <div className="grid-line-h" style={{ gridRow: 7 }} />
+          <div className="grid-line-h" style={{ gridRow: 10 }} />
+        </div>
+
+        {/* MENU ITEMS (Integrated at the top) */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              className="menu-overlay"
+              initial={{ y: -80, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -80, opacity: 0 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <ul className="menu-list">
+                {menuItems.map((item, i) => (
+                  <motion.li
+                    key={item}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + i * 0.05 }}
+                    className="menu-item"
+                  >
+                    <a href={`#${item.toLowerCase()}`} onClick={() => setIsOpen(false)}>
+                      {item}
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* TOGGLE BUTTON */}
+        <motion.div
+          animate={{ y: isOpen ? 80 : 0 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          style={{ position: 'fixed', top: 0, left: '50%', transform: 'translateX(-50%)', zIndex: 3000 }}
+        >
+          <Navbar isOpen={isOpen} setIsOpen={setIsOpen} />
+        </motion.div>
+
+        {/* THE SHRINKING CONTENT CONTAINER */}
+        <motion.div
+          id="scroll-container"
+          ref={scrollContainerRef}
+          className="page-wrapper"
+          animate={{
+            scale: isOpen ? 0.92 : 1,
+            borderRadius: isOpen ? '40px' : '0px',
+            y: isOpen ? 100 : 0,
+            opacity: isOpen ? 0.8 : 1
+          }}
+          transition={{
+            duration: 0.6,
+            ease: [0.22, 1, 0.36, 1]
+          }}
+          style={{
+            transformOrigin: 'top center',
+            boxShadow: isOpen ? '0 100px 200px rgba(0,0,0,0.15)' : 'none',
+            overflow: isOpen ? 'hidden' : 'auto',
+            background: '#000000',
+            zIndex: 10,
+            scrollBehavior: 'smooth',
+            position: 'relative'
+          }}
+        >
+          <main className="content-layer">
+            <div id="home" style={{ scrollMarginTop: 0 }}>
+              <div id="parallax-target" style={{ height: '600vh', position: 'relative' }}>
+                <div id="about" style={{ position: 'absolute', top: '35vh', scrollMarginTop: '100px' }} />
+                <section className="hero-section">
+                  <ScrollRevealParallax />
+                </section>
+              </div>
+            </div>
+            <div
+              ref={strockContainerRef}
+              style={{ position: 'relative', width: '100%', display: 'block', backgroundColor: '#FFFFFF' }}
+            >
+              <TechnologiesSection />
+              <ExperienceSection />
+              <CodingProfilesSection />
+              <ContactSection />
+              <Footer />
+              <StrockLine scrollYProgress={strockProgress} />
+            </div>
+          </main>
+        </motion.div>
+      </motion.div>
+    </div>
+  )
+}
