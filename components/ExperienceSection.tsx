@@ -180,8 +180,14 @@ const ExpandedSectionView = ({
         zIndex: 1000,
         overflow: 'hidden',
         display: 'flex',
+        pointerEvents: 'auto',
       }}
+      onClick={onClose}
     >
+      <div 
+        style={{ display: 'flex', width: '100%', height: '100%' }}
+        onClick={(e) => e.stopPropagation()}
+      >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
         .expanded-scroll::-webkit-scrollbar { display: none; }
@@ -412,6 +418,7 @@ const ExpandedSectionView = ({
           </div>
         )}
       </div>
+    </div>
     </motion.div>
   );
 };
@@ -453,6 +460,34 @@ const ExperienceSection: React.FC = () => {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
+  const handleClose = () => {
+    setSelectedCard(null);
+    // Clear hash without jump
+    if (window.location.hash) {
+      window.history.pushState("", document.title, window.location.pathname + window.location.search);
+    }
+  };
+
+  // Lock body scroll when a modal is open
+  useEffect(() => {
+    const scrollContainer = document.getElementById('scroll-container');
+    if (selectedCard) {
+      if (scrollContainer) {
+        scrollContainer.style.overflow = 'hidden';
+      }
+    } else {
+      if (scrollContainer) {
+        scrollContainer.style.overflow = 'auto';
+      }
+    }
+    
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.style.overflow = 'auto';
+      }
+    };
+  }, [selectedCard]);
+
   return (
     <section
       id="experience"
@@ -467,7 +502,7 @@ const ExperienceSection: React.FC = () => {
         justifyContent: 'flex-start',
         paddingTop: '10vh',
         position: 'relative',
-        zIndex: 50,
+        zIndex: 100,
         boxSizing: 'border-box',
         overflow: 'hidden',
       }}
@@ -501,8 +536,24 @@ const ExperienceSection: React.FC = () => {
 
       {/* Expanded View Modal */}
       <AnimatePresence>
+        {selectedCard && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleClose}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              backdropFilter: 'blur(10px)',
+              zIndex: 999,
+              cursor: 'pointer'
+            }}
+          />
+        )}
         {selectedCard === 'left' && (
-          <ProjectGallery key="left-gallery" onClose={() => setSelectedCard(null)} />
+          <ProjectGallery key="left-gallery" onClose={handleClose} />
         )}
         {selectedCard === 'right' && (
           <ExpandedSectionView
@@ -511,7 +562,7 @@ const ExperienceSection: React.FC = () => {
             imageSrc={cardData.right.expandedSrc || cardData.right.src}
             bgColor={cardData.right.color}
             repos={repos}
-            onClose={() => setSelectedCard(null)}
+            onClose={handleClose}
           />
         )}
       </AnimatePresence>

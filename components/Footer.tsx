@@ -33,7 +33,7 @@ const Footer: React.FC = () => {
       flexDirection: 'column',
       gap: '0',
       position: 'relative',
-      zIndex: 40, // Lowered to prevent overlap with experience section modals
+      zIndex: 10, // Lowered to prevent overlap with experience section modals
       fontFamily: "'Inter', sans-serif"
     }}>
       <div style={{

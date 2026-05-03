@@ -13,7 +13,7 @@ const ContactSection: React.FC = () => {
         color: '#000000',
         padding: '120px 0 0 0',
         position: 'relative',
-        zIndex: 40,
+        zIndex: 10,
         minHeight: 'auto',
         display: 'flex',
         flexDirection: 'column',

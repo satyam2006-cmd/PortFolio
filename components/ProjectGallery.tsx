@@ -81,112 +81,119 @@ export default function ProjectGallery({ onClose }: ProjectGalleryProps) {
         color: '#fff', 
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        pointerEvents: 'auto'
       }}
+      onClick={onClose}
     >
-      {/* Background Text */}
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        fontSize: '15vw',
-        fontWeight: 900,
-        color: 'rgba(255, 255, 255, 0.15)',
-        whiteSpace: 'nowrap',
-        zIndex: 0,
-        pointerEvents: 'none',
-        textTransform: 'uppercase',
-        letterSpacing: '0.1em'
-      }}>
-        EXPLORE   PROJECTS
-      </div>
-
-      {/* Astro Image (Static) */}
-      <img 
-        src="/rest-removebg-preview.png"
-        alt="Astronaut"
-        style={{
-          position: 'absolute',
-          left: '5vw',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          width: '40vw',
-          height: 'auto',
-          maxHeight: '85vh',
-          objectFit: 'contain',
-          zIndex: 5,
-          pointerEvents: 'none',
-          filter: 'drop-shadow(0 0 100px rgba(139, 0, 0, 0.3))' // Keep the soft glow
-        }}
-      />
-
-
-      {/* Main Content Area */}
-      <div style={{ 
-        position: 'relative', 
-        zIndex: 10, 
-        width: '100%', 
-        height: '100%', 
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: '0 5vw',
-        overflow: 'hidden'
-      }}>
-      
-      <motion.button
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        onClick={onClose}
-        style={{
-          position: 'absolute',
-          top: '30px',
-          right: '40px',
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: '50%',
-          color: '#fff',
-          cursor: 'pointer',
-          fontSize: '1.5rem',
-          fontWeight: 300,
-          zIndex: 1010,
-          width: '60px',
-          height: '60px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }}
+      <div 
+        style={{ width: '100%', height: '100%', display: 'flex', position: 'relative' }}
+        onClick={(e) => e.stopPropagation()}
       >
-        ✕
-      </motion.button>
-
-        {/* Right Side - Curved Carousel */}
-        <div style={{ 
-          flex: '0 0 50%', 
-          marginLeft: 'auto', // Push to right
-          height: '100%', 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'flex-end',
-          position: 'relative',
-          zIndex: 20
+        {/* Background Text */}
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontSize: '15vw',
+          fontWeight: 900,
+          color: 'rgba(255, 255, 255, 0.15)',
+          whiteSpace: 'nowrap',
+          zIndex: 0,
+          pointerEvents: 'none',
+          textTransform: 'uppercase',
+          letterSpacing: '0.1em'
         }}>
-          <motion.div
-             initial={{ opacity: 0, x: 100 }}
-             animate={{ opacity: 1, x: 0 }}
-             transition={{ delay: 0.4, duration: 1 }}
-             style={{ width: '100%', height: '80vh' }}
-          >
-            <Carousel 
-              items={displayItems}
-              baseWidth={520}
-              baseHeight={340}
-            />
-          </motion.div>
+          EXPLORE   PROJECTS
         </div>
-
+  
+        {/* Astro Image (Static) */}
+        <img 
+          src="/rest-removebg-preview.png"
+          alt="Astronaut"
+          style={{
+            position: 'absolute',
+            left: '5vw',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: '40vw',
+            height: 'auto',
+            maxHeight: '85vh',
+            objectFit: 'contain',
+            zIndex: 5,
+            pointerEvents: 'none',
+            filter: 'drop-shadow(0 0 100px rgba(139, 0, 0, 0.3))' // Keep the soft glow
+          }}
+        />
+  
+  
+        {/* Main Content Area */}
+        <div style={{ 
+          position: 'relative', 
+          zIndex: 10, 
+          width: '100%', 
+          height: '100%', 
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: '0 5vw',
+          overflow: 'hidden'
+        }}>
+        
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '30px',
+            right: '40px',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '50%',
+            color: '#fff',
+            cursor: 'pointer',
+            fontSize: '1.5rem',
+            fontWeight: 300,
+            zIndex: 1010,
+            width: '60px',
+            height: '60px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          whileHover={{ scale: 1.1, background: 'rgba(255,255,255,0.1)' }}
+        >
+          ✕
+        </motion.button>
+  
+          {/* Right Side - Curved Carousel */}
+          <div style={{ 
+            flex: '0 0 50%', 
+            marginLeft: 'auto', // Push to right
+            height: '100%', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'flex-end',
+            position: 'relative',
+            zIndex: 20
+          }}>
+            <motion.div
+               initial={{ opacity: 0, x: 100 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ delay: 0.4, duration: 1 }}
+               style={{ width: '100%', height: '80vh' }}
+            >
+              <Carousel 
+                items={displayItems}
+                baseWidth={520}
+                baseHeight={340}
+              />
+            </motion.div>
+          </div>
+  
+        </div>
       </div>
 
     </motion.div>

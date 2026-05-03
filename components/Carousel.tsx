@@ -104,10 +104,9 @@ export default function Carousel({
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={0.2}
               onDragEnd={handleDragEnd}
-              onClick={() => {
+              onTap={() => {
                 if (!isVisible) return;
                 if (!isActive) goTo(i);
-                else if (item.url) window.open(item.url, '_blank', 'noreferrer noopener');
               }}
               animate={{
                 rotateZ: angle,
@@ -195,10 +194,37 @@ export default function Carousel({
                 <div style={{ fontSize: '10px', opacity: 0.6, maxWidth: '180px', lineHeight: 1.65 }}>
                   {item.description}
                 </div>
-                <div style={{ textAlign: 'right' }}>
+                <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px', zIndex: 5 }}>
                   <div style={{ fontSize: '10px', fontWeight: 800, color: '#FF3D00', letterSpacing: '1px', textTransform: 'uppercase' }}>
                     Satyam2006-cmd
                   </div>
+                  {isActive && item.url && (
+                    <motion.button
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      whileHover={{ scale: 1.05, backgroundColor: '#FF3D00', color: '#fff' }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(item.url, '_blank', 'noreferrer noopener');
+                      }}
+                      style={{
+                        padding: '6px 14px',
+                        background: 'rgba(255,255,255,0.15)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        borderRadius: '100px',
+                        color: '#fff',
+                        fontSize: '10px',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        textTransform: 'uppercase',
+                        letterSpacing: '1.5px',
+                        boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                      }}
+                    >
+                      View Project
+                    </motion.button>
+                  )}
                   <div style={{ fontSize: '8px', fontWeight: 700, opacity: 0.3, letterSpacing: '2px', textTransform: 'uppercase' }}>
                     {item.tech || '2026'}
                   </div>

@@ -57,7 +57,7 @@ const TechnologiesSection = () => {
         width: '100%',
         padding: '0 8vw 120px 8vw',
         backgroundColor: 'transparent',
-        zIndex: 50,
+        zIndex: 10,
         fontFamily: "'Inter', sans-serif"
       }}
     >
