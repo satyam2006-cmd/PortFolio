@@ -19,11 +19,15 @@ export default function Carousel({
   baseWidth = 360,
   baseHeight = 220,
   loop = false,
+  disableInteraction = false,
+  themeColor = 'mixed'
 }: {
   items: CarouselItemData[];
   baseWidth?: number;
   baseHeight?: number;
   loop?: boolean;
+  disableInteraction?: boolean;
+  themeColor?: 'red' | 'yellow' | 'mixed';
 }) {
   const [active, setActive] = useState(2);
 
@@ -81,7 +85,16 @@ export default function Carousel({
           
           const isRed = i % 3 === 0;
           const isWhite = i % 3 === 2;
-          const bgColor = isRed ? '#FF3D00' : isWhite ? '#F2EFEA' : '#111';
+          
+          let bgColor = '#111';
+          if (themeColor === 'red') {
+            bgColor = isRed ? '#FF0000' : isWhite ? '#FF3D00' : '#111';
+          } else if (themeColor === 'yellow') {
+            bgColor = isRed ? '#FFD700' : isWhite ? '#FFA500' : '#111';
+          } else {
+            bgColor = isRed ? '#FF3D00' : isWhite ? '#F2EFEA' : '#111';
+          }
+          
           const textColor = '#fff';
 
           const boxShadow = isActive 
@@ -100,11 +113,12 @@ export default function Carousel({
           return (
             <motion.div
               key={`${item.id}-${i}`}
-              drag="y"
+              drag={!disableInteraction ? "y" : false}
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={0.2}
               onDragEnd={handleDragEnd}
               onTap={() => {
+                if (disableInteraction) return;
                 if (!isVisible) return;
                 if (!isActive) goTo(i);
               }}
@@ -127,6 +141,8 @@ export default function Carousel({
                 y: '-50%',
                 width: baseWidth,
                 height: baseHeight,
+                maxWidth: '80vw',
+                maxHeight: '60vh',
                 borderRadius: '24px', // Extra roundness as requested
                 backgroundColor: bgColor,
                 color: textColor,

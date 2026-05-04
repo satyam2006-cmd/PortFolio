@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, forwardRef } from 'react';
 import { motion } from 'framer-motion';
 import Carousel from './Carousel';
 import { ArrowRight } from 'lucide-react';
@@ -19,8 +19,18 @@ interface ProjectGalleryProps {
   onClose: () => void;
 }
 
-export default function ProjectGallery({ onClose }: ProjectGalleryProps) {
+const ProjectGallery = forwardRef<HTMLDivElement, ProjectGalleryProps>(({ onClose }, ref) => {
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleClose = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setIsClosing(true);
+    // Give Framer Motion time to release pointer capture before unmounting
+    setTimeout(() => {
+      onClose();
+    }, 150);
+  };
 
   // Fetch GitHub repos
   useEffect(() => {
@@ -35,11 +45,11 @@ export default function ProjectGallery({ onClose }: ProjectGalleryProps) {
         const sorted = filtered.sort((a, b) => {
           const aHasLive = !!a.homepage;
           const bHasLive = !!b.homepage;
-          
+
           if (aHasLive !== bHasLive) {
             return aHasLive ? -1 : 1;
           }
-          
+
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
         });
         setRepos(sorted);
@@ -63,88 +73,65 @@ export default function ProjectGallery({ onClose }: ProjectGalleryProps) {
   ];
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      style={{ 
-        position: 'fixed',
-        inset: '2vw',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderRadius: '50px',
-        backgroundColor: '#000',
-        background: 'radial-gradient(circle at 40% 50%, #4a0404 0%, #1a0202 70%, #000000 100%)',
-        boxShadow: '0 50px 150px rgba(0,0,0,0.6)',
-        zIndex: 1000,
-        overflow: 'hidden',
-        color: '#fff', 
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        pointerEvents: 'auto'
-      }}
-      onClick={onClose}
+    <div
+      style={{ width: '100%', height: '100%', display: 'flex', position: 'relative', background: 'radial-gradient(135deg, #cb3434d3 0%, #800000 100%)' }}
+      onClick={(e) => e.stopPropagation()}
     >
-      <div 
-        style={{ width: '100%', height: '100%', display: 'flex', position: 'relative' }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Background Text */}
-        <div style={{
+      {/* Background Text */}
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: '15vw',
+        fontWeight: 900,
+        color: 'rgba(246, 6, 6, 0.15)',
+        whiteSpace: 'nowrap',
+        zIndex: 0,
+        pointerEvents: 'none',
+        textTransform: 'uppercase',
+        letterSpacing: '0.01em'
+      }}>
+        EXPLORE   PROJECTS
+      </div>
+
+      {/* Astro Image (Static) */}
+      <img
+        src="/rest-removebg-preview.png"
+        alt="Astronaut"
+        style={{
           position: 'absolute',
+          left: '5vw',
           top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          fontSize: '15vw',
-          fontWeight: 900,
-          color: 'rgba(255, 255, 255, 0.15)',
-          whiteSpace: 'nowrap',
-          zIndex: 0,
+          transform: 'translateY(-50%)',
+          width: '40vw',
+          height: 'auto',
+          maxHeight: '85vh',
+          objectFit: 'contain',
+          zIndex: 5,
           pointerEvents: 'none',
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em'
-        }}>
-          EXPLORE   PROJECTS
-        </div>
-  
-        {/* Astro Image (Static) */}
-        <img 
-          src="/rest-removebg-preview.png"
-          alt="Astronaut"
-          style={{
-            position: 'absolute',
-            left: '5vw',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: '40vw',
-            height: 'auto',
-            maxHeight: '85vh',
-            objectFit: 'contain',
-            zIndex: 5,
-            pointerEvents: 'none',
-            filter: 'drop-shadow(0 0 100px rgba(139, 0, 0, 0.3))' // Keep the soft glow
-          }}
-        />
-  
-  
-        {/* Main Content Area */}
-        <div style={{ 
-          position: 'relative', 
-          zIndex: 10, 
-          width: '100%', 
-          height: '100%', 
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          padding: '0 5vw',
-          overflow: 'hidden'
-        }}>
-        
+          filter: 'drop-shadow(0 0 100px rgba(139, 0, 0, 0.3))' // Keep the soft glow
+        }}
+      />
+
+
+      {/* Main Content Area */}
+      <div style={{
+        position: 'relative',
+        zIndex: 10,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: '0 5vw',
+        overflow: 'hidden'
+      }}>
+
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          onClick={onClose}
+          onClick={handleClose}
           style={{
             position: 'absolute',
             top: '30px',
@@ -167,36 +154,38 @@ export default function ProjectGallery({ onClose }: ProjectGalleryProps) {
         >
           ✕
         </motion.button>
-  
-          {/* Right Side - Curved Carousel */}
-          <div style={{ 
-            flex: '0 0 50%', 
-            marginLeft: 'auto', // Push to right
-            height: '100%', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'flex-end',
-            position: 'relative',
-            zIndex: 20
-          }}>
-            <motion.div
-               initial={{ opacity: 0, x: 100 }}
-               animate={{ opacity: 1, x: 0 }}
-               transition={{ delay: 0.4, duration: 1 }}
-               style={{ width: '100%', height: '80vh' }}
-            >
-              <Carousel 
-                items={displayItems}
-                baseWidth={520}
-                baseHeight={340}
-              />
-            </motion.div>
-          </div>
-  
-        </div>
-      </div>
 
-    </motion.div>
+        {/* Right Side - Curved Carousel */}
+        <div style={{
+          flex: '0 0 50%',
+          marginLeft: 'auto', // Push to right
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          position: 'relative',
+          zIndex: 20
+        }}>
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 1 }}
+            style={{ width: '100%', height: '80vh' }}
+          >
+            <Carousel
+              items={displayItems}
+              baseWidth={520}
+              baseHeight={340}
+              disableInteraction={isClosing}
+              themeColor="red"
+            />
+          </motion.div>
+        </div>
+
+      </div>
+    </div>
   );
-}
+});
+
+export default ProjectGallery;
 

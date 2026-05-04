@@ -73,6 +73,7 @@ export default function Home() {
         <AnimatePresence>
           {isOpen && (
             <motion.div
+              key="menu-overlay"
               className="menu-overlay"
               initial={{ y: -80, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}

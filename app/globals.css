@@ -1,7 +1,8 @@
 :root {
   --background: #ffffff;
   --foreground: #111111;
-  --grid-line: rgba(0, 0, 0, 0.05); /* Very subtle lines */
+  --grid-line: rgba(0, 0, 0, 0.05);
+  /* Very subtle lines */
   --frame-border: rgba(0, 0, 0, 0.1);
   --accent: #555555;
   --hero-orange: #ff5f1f;
@@ -15,10 +16,11 @@
 }
 
 body {
-  background: #fdfdfd; 
+  background: #fdfdfd;
   color: var(--foreground);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  overflow: hidden; /* Stop body scrolling to use the wrapped shrink */
+  overflow: hidden;
+  /* Stop body scrolling to use the wrapped shrink */
   line-height: 1.5;
 }
 
@@ -27,7 +29,8 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: #ebebeb; /* Darker background visible behind shrink */
+  background: #ebebeb;
+  /* Darker background visible behind shrink */
 }
 
 /* GLOBAL GRID - FIXED TO VIEWPORT */
@@ -38,7 +41,8 @@ body {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 100; /* Above the content layer */
+  z-index: 100;
+  /* Above the content layer */
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: repeat(12, 1fr);
@@ -104,7 +108,8 @@ body {
   position: relative;
   height: 100vh;
   width: 100vw;
-  overflow-y: auto; /* Internal scrolling */
+  overflow-y: auto;
+  /* Internal scrolling */
   scroll-behavior: smooth;
   background: white;
 }
@@ -117,7 +122,8 @@ body {
 /* Hero Section */
 .hero-section {
   min-height: 100vh;
-  background-color: white; /* Swapped to white */
+  background-color: white;
+  /* Swapped to white */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -134,18 +140,21 @@ body {
   left: 30.5px;
   right: 30.5px;
   bottom: 30.5px;
-  background: var(--hero-orange); /* Swapped to orange */
+  background: var(--hero-orange);
+  /* Swapped to orange */
   z-index: 0;
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
 .hi-there {
   position: absolute;
-  font-size: 12vw; /* Further decreased to ensure 'HI THERE !' fits comfortably */
+  font-size: 12vw;
+  /* Further decreased to ensure 'HI THERE !' fits comfortably */
   font-weight: 950;
-  color: rgba(0, 0, 0, 0.1); /* Adjusted visibility */
+  color: rgba(0, 0, 0, 0.1);
+  /* Adjusted visibility */
   pointer-events: none;
   z-index: 1;
   top: 50%;
@@ -153,7 +162,8 @@ body {
   transform: translate(-50%, -50%);
   text-transform: uppercase;
   letter-spacing: -0.05em;
-  white-space: nowrap; /* Forces text to stay on one line */
+  white-space: nowrap;
+  /* Forces text to stay on one line */
 }
 
 .hero-composition {
@@ -169,16 +179,21 @@ body {
   z-index: 5;
 }
 
-.text-layer-solid, .text-layer-outline {
+.text-layer-solid,
+.text-layer-outline {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   pointer-events: none;
 }
 
 .text-layer-solid {
   color: #ffffff;
   z-index: 10;
-  -webkit-text-stroke: 3px transparent; /* Match the outline layer's stroke width for identical layout metrics */
+  -webkit-text-stroke: 3px transparent;
+  /* Match the outline layer's stroke width for identical layout metrics */
   paint-order: stroke fill;
 }
 
@@ -189,7 +204,8 @@ body {
   paint-order: stroke fill;
 }
 
-.top-text, .bottom-text {
+.top-text,
+.bottom-text {
   position: absolute;
   width: 100%;
   text-align: center;
@@ -218,10 +234,11 @@ body {
 }
 
 .astronaut-img {
-  display: block; /* Removes inline spacing gap */
+  display: block;
+  /* Removes inline spacing gap */
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.3));
   pointer-events: auto;
 }
 
@@ -238,7 +255,257 @@ body {
 }
 
 @keyframes pulse {
-  0% { opacity: 0.2; }
-  50% { opacity: 1; }
-  100% { opacity: 0.2; }
+  0% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* Responsiveness Fixes */
+.experience-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 768px) {
+  .experience-grid {
+    grid-template-columns: 1fr !important;
+    width: 90% !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+}
+
+/* Menu Items at Top */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 80px;
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.menu-list {
+  list-style: none;
+  display: flex;
+  gap: 48px;
+}
+
+.menu-item a {
+  text-decoration: none;
+  color: #666;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.menu-item a:hover {
+  color: #000;
+}
+
+/* Shrink Content Wrapper */
+.page-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  /* Internal scrolling */
+  scroll-behavior: smooth;
+  background: white;
+}
+
+.content-layer {
+  position: relative;
+  width: 100%;
+}
+
+/* Hero Section */
+.hero-section {
+  min-height: 100vh;
+  background-color: white;
+  /* Swapped to white */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.hero-enclosure {
+  position: absolute;
+  top: 30.5px;
+  left: 30.5px;
+  right: 30.5px;
+  bottom: 30.5px;
+  background: var(--hero-orange);
+  /* Swapped to orange */
+  z-index: 0;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.hi-there {
+  position: absolute;
+  font-size: 12vw;
+  /* Further decreased to ensure 'HI THERE !' fits comfortably */
+  font-weight: 950;
+  color: rgba(0, 0, 0, 0.1);
+  /* Adjusted visibility */
+  pointer-events: none;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  /* Forces text to stay on one line */
+}
+
+.hero-composition {
+  position: absolute;
+  top: 30.5px;
+  left: 30.5px;
+  right: 30.5px;
+  bottom: 30.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.text-layer-solid,
+.text-layer-outline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.text-layer-solid {
+  color: #ffffff;
+  z-index: 10;
+  -webkit-text-stroke: 3px transparent;
+  /* Match the outline layer's stroke width for identical layout metrics */
+  paint-order: stroke fill;
+}
+
+.text-layer-outline {
+  -webkit-text-stroke: 3px #ffffff;
+  color: transparent;
+  z-index: 30;
+  paint-order: stroke fill;
+}
+
+.top-text,
+.bottom-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(4rem, 13vw, 11rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.06em;
+  margin: 0;
+  line-height: 1;
+}
+
+.top-text {
+  top: 15%;
+}
+
+.bottom-text {
+  bottom: 12%;
+}
+
+.astronaut-img-wrapper {
+  position: absolute;
+  bottom: 0;
+  width: 45vw;
+  max-width: 650px;
+  z-index: 20;
+}
+
+.astronaut-img {
+  display: block;
+  /* Removes inline spacing gap */
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.3));
+  pointer-events: auto;
+}
+
+.hero-desc {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 500px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  z-index: 15;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* Responsiveness Fixes */
+.experience-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 768px) {
+  .experience-grid {
+    grid-template-columns: 1fr !important;
+    width: 90% !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .experience-grid>div {
+    height: 400px;
+  }
+}
+
+.no-scroll {
+  overflow: hidden !important;
+}
+
+body.modal-open #scroll-container {
+  overflow: hidden !important;
 }

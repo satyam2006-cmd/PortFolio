@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Carousel from './Carousel';
 import ProjectGallery from './ProjectGallery';
+import Modal from './Modal';
 
 // Types
 interface GitHubRepo {
@@ -11,6 +12,14 @@ interface GitHubRepo {
   homepage: string | null;
   language: string | null;
   stargazers_count: number;
+}
+
+interface ExpandedSectionViewProps {
+  imageSrc: string;
+  bgColor: string;
+  repos: GitHubRepo[];
+  side: 'left' | 'right';
+  onClose: () => void;
 }
 
 // ─── Experience Card (for the grid) ────────────────────────────────
@@ -139,19 +148,14 @@ const ExperienceCard = ({
 };
 
 // ─── Expanded Section View (Split Layout) ───────────────────────────
-const ExpandedSectionView = ({
+const ExpandedSectionView = forwardRef<HTMLDivElement, ExpandedSectionViewProps>(({
   imageSrc,
   bgColor,
   repos,
   side,
   onClose,
-}: {
-  imageSrc: string;
-  bgColor: string;
-  repos: GitHubRepo[];
-  side: 'left' | 'right';
-  onClose: () => void;
-}) => {
+}, ref) => {
+  const [isClosing, setIsClosing] = useState(false);
   const carouselItems = repos.map(repo => ({
     id: repo.name,
     title: repo.name.replace(/-/g, ' '),
@@ -164,30 +168,19 @@ const ExpandedSectionView = ({
     ? 'radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 50%), linear-gradient(135deg, #FFB800 0%, #CC9900 40%, #5C4500 100%)'
     : bgColor;
 
+  const handleClose = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+    }, 150);
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.5 }}
-      style={{
-        position: 'fixed',
-        inset: '2vw',
-        borderRadius: '32px',
-        background: bgStyle,
-        border: '1px solid rgba(255,255,255,0.15)',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-        zIndex: 1000,
-        overflow: 'hidden',
-        display: 'flex',
-        pointerEvents: 'auto',
-      }}
-      onClick={onClose}
+    <div 
+      style={{ display: 'flex', width: '100%', height: '100%' }}
+      onClick={(e) => e.stopPropagation()}
     >
-      <div 
-        style={{ display: 'flex', width: '100%', height: '100%' }}
-        onClick={(e) => e.stopPropagation()}
-      >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
         .expanded-scroll::-webkit-scrollbar { display: none; }
@@ -207,7 +200,7 @@ const ExpandedSectionView = ({
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        onClick={onClose}
+        onClick={handleClose}
         style={{
           position: 'absolute',
           top: '30px',
@@ -243,6 +236,7 @@ const ExpandedSectionView = ({
         zIndex: 10,
         pointerEvents: 'none',
         overflow: 'hidden',
+        background: 'linear-gradient(135deg, #FFB800 0%, #CC9900 100%)',
       }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -320,7 +314,7 @@ const ExpandedSectionView = ({
       <div style={{ flex: 3, display: 'flex', flexDirection: 'column', zIndex: 10, height: '100%', position: 'relative', overflow: 'hidden' }}>
         {side === 'left' && (carouselItems.length > 0) && (
           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Carousel items={carouselItems} baseWidth={650} baseHeight={550} loop={true} />
+            <Carousel items={carouselItems} baseWidth={650} baseHeight={550} loop={true} disableInteraction={isClosing} themeColor="yellow" />
           </div>
         )}
 
@@ -407,7 +401,7 @@ const ExpandedSectionView = ({
 
                 <div style={{ borderTop: '2px solid rgba(0,0,0,0.05)', paddingTop: '50px' }}>
                   <button
-                    onClick={() => onClose()}
+                    onClick={handleClose}
                     style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '15px', color: '#000', fontFamily: "'Playfair Display', serif", fontSize: '1.5rem', fontWeight: 800 }}
                   >
                     View Selected Projects <span style={{ fontSize: '1.3rem', opacity: 1 }}>→</span>
@@ -419,9 +413,8 @@ const ExpandedSectionView = ({
         )}
       </div>
     </div>
-    </motion.div>
   );
-};
+});
 
 // ─── Main Experience Section ────────────────────────────────────────
 const ExperienceSection: React.FC = () => {
@@ -468,25 +461,7 @@ const ExperienceSection: React.FC = () => {
     }
   };
 
-  // Lock body scroll when a modal is open
-  useEffect(() => {
-    const scrollContainer = document.getElementById('scroll-container');
-    if (selectedCard) {
-      if (scrollContainer) {
-        scrollContainer.style.overflow = 'hidden';
-      }
-    } else {
-      if (scrollContainer) {
-        scrollContainer.style.overflow = 'auto';
-      }
-    }
-    
-    return () => {
-      if (scrollContainer) {
-        scrollContainer.style.overflow = 'auto';
-      }
-    };
-  }, [selectedCard]);
+  // Scroll lock effect has been removed to prevent state conflicts and freezing.
 
   return (
     <section
@@ -524,7 +499,8 @@ const ExperienceSection: React.FC = () => {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        style={{ width: '65%', maxWidth: '1200px', height: '80vh', maxHeight: '700px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0', marginBottom: '5vh', position: 'relative', zIndex: 1, overflow: 'hidden', borderRadius: '4px', cursor: 'pointer' }}
+        className="experience-grid"
+        style={{ width: '65%', maxWidth: '1200px', height: '80vh', maxHeight: '700px', gap: '0', marginBottom: '5vh', position: 'relative', zIndex: 1, overflow: 'hidden', borderRadius: '4px', cursor: 'pointer' }}
       >
         <div id="projects" onClick={() => setSelectedCard('left')} style={{ scrollMarginTop: '100px' }}>
           <ExperienceCard {...cardData.left} side="left" />
@@ -534,30 +510,16 @@ const ExperienceSection: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Expanded View Modal */}
-      <AnimatePresence>
-        {selectedCard && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={handleClose}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              backgroundColor: 'rgba(0,0,0,0.6)',
-              backdropFilter: 'blur(10px)',
-              zIndex: 999,
-              cursor: 'pointer'
-            }}
-          />
-        )}
+      <Modal 
+        isOpen={selectedCard !== null} 
+        onClose={handleClose}
+      >
         {selectedCard === 'left' && (
-          <ProjectGallery key="left-gallery" onClose={handleClose} />
+          <ProjectGallery onClose={handleClose} />
         )}
+        
         {selectedCard === 'right' && (
           <ExpandedSectionView
-            key="expanded-right"
             side="right"
             imageSrc={cardData.right.expandedSrc || cardData.right.src}
             bgColor={cardData.right.color}
@@ -565,7 +527,7 @@ const ExperienceSection: React.FC = () => {
             onClose={handleClose}
           />
         )}
-      </AnimatePresence>
+      </Modal>
     </section>
   );
 };
