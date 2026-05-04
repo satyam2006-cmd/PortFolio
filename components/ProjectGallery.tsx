@@ -74,7 +74,7 @@ const ProjectGallery = forwardRef<HTMLDivElement, ProjectGalleryProps>(({ onClos
 
   return (
     <div
-      style={{ width: '100%', height: '100%', display: 'flex', position: 'relative', background: 'radial-gradient(135deg, #cb3434d3 0%, #800000 100%)' }}
+      style={{ width: '100%', height: '100%', display: 'flex', position: 'relative', background: 'linear-gradient(135deg, #5b0a0ad3 0%, #800000 100%)' }}
       onClick={(e) => e.stopPropagation()}
     >
       {/* Background Text */}
@@ -85,7 +85,7 @@ const ProjectGallery = forwardRef<HTMLDivElement, ProjectGalleryProps>(({ onClos
         transform: 'translate(-50%, -50%)',
         fontSize: '15vw',
         fontWeight: 900,
-        color: 'rgba(246, 6, 6, 0.15)',
+        color: 'rgba(61, 3, 3, 0.97)',
         whiteSpace: 'nowrap',
         zIndex: 0,
         pointerEvents: 'none',
