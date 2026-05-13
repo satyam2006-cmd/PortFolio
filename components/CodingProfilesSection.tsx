@@ -12,7 +12,7 @@ const profiles = [
   },
   { 
     name: 'HackerRank', 
-    url: 'https://www.hackerrank.com/satyambhagat', 
+    url: 'https://www.hackerrank.com/satyambhagat2001',
     icon: 'https://img.icons8.com/?size=100&id=bcdiBt8pFXfZ&format=png&color=000000',
     color: '#2EC866'
   },
