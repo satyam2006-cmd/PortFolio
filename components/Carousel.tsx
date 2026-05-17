@@ -215,15 +215,15 @@ export default function Carousel({
                     Satyam2006-cmd
                   </div>
                   {isActive && item.url && (
-                    <motion.button
+                    <motion.a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       whileHover={{ scale: 1.05, backgroundColor: '#FF3D00', color: '#fff' }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(item.url, '_blank', 'noreferrer noopener');
-                      }}
+                      onClick={(e) => e.stopPropagation()}
                       style={{
                         padding: '6px 14px',
                         background: 'rgba(255,255,255,0.15)',
@@ -235,11 +235,13 @@ export default function Carousel({
                         cursor: 'pointer',
                         textTransform: 'uppercase',
                         letterSpacing: '1.5px',
-                        boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                        boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                        textDecoration: 'none',
+                        display: 'inline-block'
                       }}
                     >
                       View Project
-                    </motion.button>
+                    </motion.a>
                   )}
                   <div style={{ fontSize: '8px', fontWeight: 700, opacity: 0.3, letterSpacing: '2px', textTransform: 'uppercase' }}>
                     {item.tech || '2026'}
