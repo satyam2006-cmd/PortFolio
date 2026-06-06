@@ -56,7 +56,8 @@ const ProjectGallery = forwardRef<HTMLDivElement, ProjectGalleryProps>(
             (r) =>
               r.name !== "satyam2006-cmd" &&
               r.name !== "PortFolio" &&
-              r.name !== "Portfolio",
+              r.name !== "Portfolio" &&
+              r.name !== "register"
           );
           // Prioritize live projects, then sort by creation date (newest first)
           const sorted = filtered.sort((a, b) => {
