@@ -44,39 +44,63 @@ const ProjectGallery = forwardRef<HTMLDivElement, ProjectGalleryProps>(
       }, 150);
     };
 
-    // Fetch GitHub repos
-    useEffect(() => {
-      // Fetch by created date
-      fetch(
-        "https://api.github.com/users/satyam2006-cmd/repos?sort=created&direction=desc&per_page=12",
-      )
-        .then((res) => res.json())
-        .then((data: GitHubRepo[]) => {
-          const filtered = data.filter(
-            (r) =>
-              r.name !== "satyam2006-cmd" &&
-              r.name !== "PortFolio" &&
-              r.name !== "Portfolio" &&
-              r.name !== "register"
-          );
-          // Prioritize live projects, then sort by creation date (newest first)
-          const sorted = filtered.sort((a, b) => {
-            const aHasLive = !!a.homepage;
-            const bHasLive = !!b.homepage;
+   // Fetch ALL GitHub repos dynamically
+useEffect(() => {
+  const fetchAllRepos = async () => {
+    try {
+      let page = 1;
+      let allRepos: GitHubRepo[] = [];
 
-            if (aHasLive !== bHasLive) {
-              return aHasLive ? -1 : 1;
-            }
+      while (true) {
+        const response = await fetch(
+          `https://api.github.com/users/satyam2006-cmd/repos?sort=created&direction=desc&per_page=100&page=${page}`
+        );
 
-            return (
-              new Date(b.created_at).getTime() -
-              new Date(a.created_at).getTime()
-            );
-          });
-          setRepos(sorted);
-        })
-        .catch(console.error);
-    }, []);
+        if (!response.ok) {
+          throw new Error("Failed to fetch repositories");
+        }
+
+        const repos: GitHubRepo[] = await response.json();
+
+        if (repos.length === 0) break;
+
+        allRepos = [...allRepos, ...repos];
+        page++;
+      }
+
+      const filtered = allRepos.filter(
+        (repo) =>
+          repo.name !== "satyam2006-cmd" &&
+          repo.name !== "PortFolio" &&
+          repo.name !== "Portfolio" &&
+          repo.name !== "register"
+      );
+
+      const sorted = filtered.sort((a, b) => {
+        const aHasLive = !!a.homepage;
+        const bHasLive = !!b.homepage;
+
+        if (aHasLive !== bHasLive) {
+          return aHasLive ? -1 : 1;
+        }
+
+        return (
+          new Date(b.created_at).getTime() -
+          new Date(a.created_at).getTime()
+        );
+      });
+
+      console.log("Fetched repos:", allRepos.length);
+      console.log("Displayed repos:", sorted.length);
+
+      setRepos(sorted);
+    } catch (error) {
+      console.error("GitHub fetch error:", error);
+    }
+  };
+
+  fetchAllRepos();
+}, []);
 
     const carouselItems = repos.map((repo) => ({
       id: repo.name,
