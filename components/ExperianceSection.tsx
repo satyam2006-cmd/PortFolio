@@ -616,11 +616,29 @@ const ExpandedSectionView = forwardRef<HTMLDivElement, ExpandedSectionViewProps>
 
                 <div style={{ borderTop: '2px solid rgba(0,0,0,0.05)', paddingTop: isMobile ? '30px' : '50px' }}>
                   <button
-                    onClick={handleClose}
-                    style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '15px', color: '#000', fontFamily: "'Playfair Display', serif", fontSize: isMobile ? '1.2rem' : '1.5rem', fontWeight: 800 }}
-                  >
-                    View Selected Projects <span style={{ fontSize: '1.3rem', opacity: 1 }}>→</span>
-                  </button>
+  onClick={() => {
+    handleClose();
+    setTimeout(() => {
+      window.location.href = "https://satyambhagat.is-a.dev/#projects";
+    }, 200);
+  }}
+  style={{
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '15px',
+    color: '#000',
+    fontFamily: "'Playfair Display', serif",
+    fontSize: isMobile ? '1.2rem' : '1.5rem',
+    fontWeight: 800
+  }}
+>
+  View Selected Projects
+  <span style={{ fontSize: '1.3rem', opacity: 1 }}>→</span>
+</button>
                 </div>
               </div>
             </section>
