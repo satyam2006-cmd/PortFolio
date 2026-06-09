@@ -36,18 +36,13 @@ const techStack = [
 ];
 
 const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
+  hidden: { opacity: 1 },
+  show: { opacity: 1 }
 };
 
 const item = {
-  hidden: { y: 20, opacity: 0 },
-  show: { y: 0, opacity: 1 }
+  hidden: { opacity: 1, y: 0 },
+  show: { opacity: 1, y: 0 }
 };
 
 const TechnologiesSection = () => {
@@ -106,10 +101,6 @@ const TechnologiesSection = () => {
         </div>
 
         <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
           style={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -119,23 +110,22 @@ const TechnologiesSection = () => {
           {techStack.map((tech) => (
             <motion.div
               key={tech.name}
-              variants={item}
               whileHover={{ scale: 1.05, borderColor: '#111' }}
               style={{
-                padding: isMobile ? '8px 14px' : '10px 20px',
-                borderRadius: '100px',
-                border: '1px solid rgba(0,0,0,0.1)',
+                padding: isMobile ? '4px' : '10px 20px',
+                borderRadius: isMobile ? '0' : '100px',
+                border: isMobile ? 'none' : '1px solid rgba(0,0,0,0.1)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: isMobile ? '6px' : '10px',
+                gap: isMobile ? '0' : '10px',
                 cursor: 'default',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                backgroundColor: '#fff',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                backgroundColor: isMobile ? 'transparent' : '#fff',
+                boxShadow: isMobile ? 'none' : '0 2px 4px rgba(0,0,0,0.02)'
               }}
             >
               {(tech as any).techStackIconId ? (
-                <div style={{ width: isMobile ? '20px' : '24px', height: isMobile ? '20px' : '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: isMobile ? '24px' : '24px', height: isMobile ? '24px' : '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <StackIcon name={(tech as any).techStackIconId} />
                 </div>
               ) : (tech as any).externalIcon ? (
@@ -143,8 +133,8 @@ const TechnologiesSection = () => {
                   src={(tech as any).externalIcon}
                   alt={tech.name}
                   style={{
-                    width: isMobile ? '20px' : '24px',
-                    height: isMobile ? '20px' : '24px',
+                    width: isMobile ? '24px' : '24px',
+                    height: isMobile ? '24px' : '24px',
                     borderRadius: '4px',
                     objectFit: 'contain'
                   }}
@@ -154,23 +144,25 @@ const TechnologiesSection = () => {
                   src={`https://skillicons.dev/icons?i=${tech.iconId}&theme=light`}
                   alt={tech.name}
                   style={{
-                    width: isMobile ? '20px' : '24px',
-                    height: isMobile ? '20px' : '24px',
+                    width: isMobile ? '24px' : '24px',
+                    height: isMobile ? '24px' : '24px',
                     borderRadius: '4px'
                   }}
                 />
               ) : null}
-              {tech.name !== 'Wix' && <span style={{ fontSize: isMobile ? '0.8rem' : '0.95rem', fontWeight: 600, color: '#111' }}>{tech.name}</span>}
-              <span style={{
-                fontSize: isMobile ? '0.5rem' : '0.6rem',
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                color: '#999',
-                letterSpacing: '0.05em',
-                marginLeft: '4px'
-              }}>
-                {tech.category}
-              </span>
+              {!isMobile && tech.name !== 'Wix' && <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#111' }}>{tech.name}</span>}
+              {!isMobile && (
+                <span style={{
+                  fontSize: '0.6rem',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  color: '#999',
+                  letterSpacing: '0.05em',
+                  marginLeft: '4px'
+                }}>
+                  {tech.category}
+                </span>
+              )}
             </motion.div>
           ))}
         </motion.div>
